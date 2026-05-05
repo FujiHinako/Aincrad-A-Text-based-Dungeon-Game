@@ -4,7 +4,8 @@ import monster
 #stores list for classes which came from function "get_class_data()" in combat_styles
 class_list = combat_styles.get_class_data()
 monster_list = monster.monster_data()
-
+action_list = player.player_action_data()
+player_data_list = player.player_create
 #asks for players name
 print("Welcome to Aincrad!")
 print("Please State Your Name Traveller")
@@ -57,11 +58,25 @@ else:
 #Combat
 #player will choose which to fight for now
 
-print("Combat Phase!")
+print("Room 1!")
 for key,details in monster_list.items():
     print(f"{key}: {details['Name']}")
 monster_choice = input("> ")
 
 selected_monster = monster.select_monster(monster_choice)
+
+#Combat
+
+print(f"{selected_monster["Name"]} Spawned, What will {player_name} do? ")
+for key,details in action_list.items():
+    print(f"{key}: {details}")
+action_choice = input("> ")
+
+if action_choice == 'atk':
+    monster_hp = selected_monster["Stats"]["HP"]
+    player_dmg = player.player_create['Damage']
+
+    monster_new_hp = player.deal_damage(player_dmg,monster_hp)
+    print(f"You Dealt {player_dmg}, {selected_monster["Name"]} has {monster_new_hp} left!")
 
 

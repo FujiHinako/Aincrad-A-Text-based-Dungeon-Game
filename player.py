@@ -10,6 +10,17 @@ def player_create(name):
             "Class" : deafult_class
             }
 
-def player_damaged(damage):
-    pass
+def deal_damage(player_damage,enemy_hp):
+    new_hp = enemy_hp - player_damage
+    if new_hp < 0:
+        new_hp = 0
+    return new_hp
+
+def player_action_data():
+    return {
+            "atk" : "Attack",
+            "2" : "Skill",
+            "3" : "Items", 
+            "4" : "Run"
+            }
 
