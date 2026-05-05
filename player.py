@@ -24,3 +24,10 @@ def player_action_data():
             "4" : "Run"
             }
 
+def player_use_skill(player_dmg,monster_hp,uses):
+    
+        monster_hp -= player_dmg
+        uses -= 1
+        return monster_hp,uses
+        
+
