@@ -1,33 +1,43 @@
 import player
 import combat_styles
-#
 
+#stores list for classes which came from function "get_class_data()" in combat_styles
 class_list = combat_styles.get_class_data()
 
+#asks for players name
 print("Welcome to Aincrad!")
 print("Please State Your Name Traveller")
 player_name = input(f'> ')
 
+#stores and sends player input to player.player_create() for the players name
 create_player = player.player_create(player_name)
 
+#a for loop which loops thru items in create_player 
 for key,values in create_player.items():
     print(f'{key}: {values}')
-wants_a_class = input("Do You want a class? [1] - Yes [2] - No")
+#asks player if player wants a class
+wants_a_class = input("Do You want a class? [1] - Yes [2] - No ")
+#if players wants class (input is 1)
 if wants_a_class == 1:
+    #prompts user to choose for class
     print(f"\nPlayer {player_name} Please Choose Your Combat Style!\n")
-
+    #using the data from class_list it loops thru the classes name and damage
     for key,details in class_list.items():
         print(f"{key}: {details['Name']}")
         print(f"{details['Stats']}")
     fighting_style_choice = input("> ")
+    #sends player's input to combat_styles.select_character() for complete class info and updating player damage
     combat_styles.select_character(fighting_style_choice)
 
-
+    #checks if fighting_style_choice is in class_list (fighting_style_choice = 1 if true proceed)
     if fighting_style_choice in class_list:
-    # Access the selected data
+        # Access the selected data
+        #stores data from what the player choose
         selected_data = class_list[fighting_style_choice]
     
     # Update the player stats
+    #selected_data["Stats"]["Damage"] is used from updating create_player["Damage"] to 
+    #access deeper list value
         create_player["Damage"] = selected_data["Stats"]["Damage"]
         create_player["Class"] = selected_data["Name"] # Useful to track class name!
     
