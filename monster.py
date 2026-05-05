@@ -1,13 +1,23 @@
-deafult_hp = 100
-deafult_dmg = 10
-deafult_class = "Classless"
+
 def monster_data():
     return {
-            "Player:" : name,
-            "HP" : deafult_hp,
-            "Damage" : deafult_dmg, 
-            "Class" : deafult_class
+            "1":
+                {
+                    "Name":"Slime",
+                    "Stats": {"HP": 25,"Damage": 5}
+                },
+            "2":
+                {
+                    "Name":"Skeleton",
+                    "Stats": {"HP": 50,"Damage": 15}
+                },
+            "3":
+                {
+                    "Name":"Armoured Skeleton",
+                    "Stats": {"HP": 75,"Damage": 20}
+                }
+            
             }
 
-def player_damaged(damage):
+def monster_damaged(damage):
     pass

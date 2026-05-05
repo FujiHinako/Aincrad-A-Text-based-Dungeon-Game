@@ -1,8 +1,9 @@
 import player
 import combat_styles
-
+import monster
 #stores list for classes which came from function "get_class_data()" in combat_styles
 class_list = combat_styles.get_class_data()
+monster_list = monster.monster_data()
 
 #asks for players name
 print("Welcome to Aincrad!")
@@ -52,3 +53,11 @@ else:
     print("\n--- Player Profile ---")
     for key, value in create_player.items():
         print(f"{key}: {value}")
+
+#Combat
+#player will choose which to fight for now
+
+print("Combat Phase!")
+for key,details in monster_list.items():
+    print(f"{key}: {details['Name']}")
+monster_select = input(">")
