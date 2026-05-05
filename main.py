@@ -72,11 +72,12 @@ for key,details in action_list.items():
     print(f"{key}: {details}")
 action_choice = input("> ")
 
-if action_choice == 'atk':
+if action_choice == '1':
     monster_hp = selected_monster["Stats"]["HP"]
-    player_dmg = player.player_create['Damage']
+    player_dmg = create_player['Damage']
 
-    monster_new_hp = player.deal_damage(player_dmg,monster_hp)
-    print(f"You Dealt {player_dmg}, {selected_monster["Name"]} has {monster_new_hp} left!")
+    selected_monster["Stats"]["HP"] = player.deal_damage(player_dmg,monster_hp)
+    print(f"You Dealt {player_dmg}, {selected_monster["Name"]} has {selected_monster["Stats"]["HP"]} left!")
+   
 
 

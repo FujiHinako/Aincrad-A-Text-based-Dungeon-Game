@@ -18,7 +18,7 @@ def deal_damage(player_damage,enemy_hp):
 
 def player_action_data():
     return {
-            "atk" : "Attack",
+            "1" : "Attack",
             "2" : "Skill",
             "3" : "Items", 
             "4" : "Run"
