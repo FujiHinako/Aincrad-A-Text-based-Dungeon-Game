@@ -36,5 +36,8 @@ def select_monster(choice):
     else:
         print("Invalid Choice!")
         return None
-def monster_damaged(damage):
-    pass
+def deal_damage(monster_damage,player_hp):
+    new_hp = player_hp - monster_damage
+    if new_hp < 0:
+        new_hp = 0
+    return new_hp
