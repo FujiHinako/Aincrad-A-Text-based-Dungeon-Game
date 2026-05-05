@@ -1,4 +1,3 @@
-import combat_styles
 
 deafult_hp = 100
 deafult_dmg = 10
@@ -10,4 +9,7 @@ def player_create(name):
             "Damage" : deafult_dmg, 
             "Class" : deafult_class
             }
+
+def player_damaged(damage):
+    pass
 
