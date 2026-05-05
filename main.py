@@ -123,7 +123,8 @@ while True:
                 skill_dmg = selected_skill["Damage"]
                 curent = selected_skill["uses"]
                 monster_hp = selected_monster["Stats"]["HP"]
-                
+                monster_dmg = selected_monster["Stats"]["Damage"]
+                player_hp = create_player["HP"]
                 new_monster_hp,uses = player.player_use_skill(skill_dmg,monster_hp,curent)
 
                 
