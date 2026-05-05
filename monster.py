@@ -18,6 +18,23 @@ def monster_data():
                 }
             
             }
-
+def select_monster(choice):
+    monster = monster_data()
+    
+    # Check if the choice exists in our data
+    if str(choice) in monster:
+        char = monster[str(choice)]
+        
+        print(f"\n--- {char['Name']} ---")
+        
+        # Loop through Stats
+        for key, value in char['Stats'].items():
+            print(f"{key}: {value}")
+            
+        
+        return char # Return the specific dictionary for the game to use
+    else:
+        print("Invalid Choice!")
+        return None
 def monster_damaged(damage):
     pass

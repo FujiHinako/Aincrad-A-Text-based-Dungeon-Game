@@ -27,10 +27,7 @@ def select_character(choice):
         for key, value in char['Stats'].items():
             print(f"{key}: {value}")
             
-        # Loop through Skills
-        print("Skills:")
-        for skill_id, skill_name in char['Skills'].items():
-            print(f"  [{skill_id}] {skill_name}")
+
             
         return char # Return the specific dictionary for the game to use
     else:

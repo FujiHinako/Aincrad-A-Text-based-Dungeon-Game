@@ -19,7 +19,7 @@ for key,values in create_player.items():
 #asks player if player wants a class
 wants_a_class = input("Do You want a class? [1] - Yes [2] - No ")
 #if players wants class (input is 1)
-if wants_a_class == 1:
+if wants_a_class == "1":
     #prompts user to choose for class
     print(f"\nPlayer {player_name} Please Choose Your Combat Style!\n")
     #using the data from class_list it loops thru the classes name and damage
@@ -40,7 +40,7 @@ if wants_a_class == 1:
     #selected_data["Stats"]["Damage"] is used from updating create_player["Damage"] to 
     #access deeper list value
         create_player["Damage"] = selected_data["Stats"]["Damage"]
-        create_player["Class"] = selected_data["Name"] # Useful to track class name!
+        create_player["Class"] = selected_data["Name"] \
     
         print(f"\nPower increased! You are now a {create_player['Class']} with {create_player['Damage']} Damage.")
     else:
@@ -60,4 +60,8 @@ else:
 print("Combat Phase!")
 for key,details in monster_list.items():
     print(f"{key}: {details['Name']}")
-monster_select = input(">")
+monster_choice = input("> ")
+
+selected_monster = monster.select_monster(monster_choice)
+
+
