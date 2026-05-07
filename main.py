@@ -112,8 +112,11 @@ while True:
             skill_choice = input(">")
             
             chosen_skill_dmg = combat["Skills"][skill_choice]["Damage"]
+            chosen_skill_uses = combat["Skills"][skill_choice]["uses"]
             chosen_skill_name = combat["Name"]
+
             mnstr_hp = combat_styles.skill_damage(chosen_skill_name,mnstr_name,chosen_skill_dmg,mnstr_hp)
+            print(f"Uses Left: {chosen_skill_uses}")
             is_monster_dead(mnstr_hp)
         else:
             print("Invalid Input! Try Again!\n")

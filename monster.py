@@ -1,9 +1,10 @@
-from random import choice
+
+import random
 monster_list = [
-    #monster_name, HP, Attack
-    ("Slime", 10,5),
-    ("Skeleton",20,10),
-    ("Armoured Skeleton",40,15)
+    #monster_name, HP, Attack,Coins
+    ("Slime", 10,5,random.randint(1,3)),
+    ("Skeleton",20,10,random.randint(4,10)),
+    ("Armoured Skeleton",40,15,random.randint(10,13))
     ]
    
     
@@ -11,7 +12,8 @@ monster_list = [
 
 
 def spawn_monster():
-    monster = choice(monster_list)
+    monster_chance = random.randint(1,100)
+    monster = random.choice(monster_list)
     return(monster)
 
 
