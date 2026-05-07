@@ -2,7 +2,7 @@
 import random
 monster_list = [
     #monster_name, HP, Attack,Coins
-    ("Slime", 10,5,random.randint(1,3)),
+    ("Slime", 10,60,random.randint(1,3)),
     ("Skeleton",20,10,random.randint(4,10)),
     ("Armoured Skeleton",40,15,random.randint(10,13))
     ]

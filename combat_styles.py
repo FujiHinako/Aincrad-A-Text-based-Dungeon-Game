@@ -41,16 +41,22 @@ def select_class(choice):
             
         
         return char # Return the specific dictionary for the game to use
+    
     else:
         print("Invalid Choice!")
         return None
     
 def display_skill_interface(player_skill):
+    all_data = get_class_data()
+    
+    # Check if the choice exists in our data
+   
     for key, skill_info in player_skill.items():
-                name = skill_info["Name"]
-                dmg = skill_info["Damage"]
-                uses = skill_info["uses"]
-                print(f"[{key}] {name} - Deals {dmg} Damage \n Uses: {uses}")
+        name = skill_info["Name"]
+        dmg = skill_info["Damage"]
+        uses = skill_info  ["uses"]
+        print(f"[{key}] {name} - Deals {dmg} Damage \n Uses: {uses}")
+    
 
 def skill_damage(skill_name,monster_name,skill_dmg,monster_hp):
      

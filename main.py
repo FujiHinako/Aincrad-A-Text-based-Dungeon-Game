@@ -5,7 +5,7 @@ import monster
 class_list = combat_styles.get_class_data()
 action_list = player.player_action_data()
 player_data_list = player.player_create
-mnstr_name,mnstr_hp,mnstr_dmg = monster.spawn_monster()
+mnstr_name,mnstr_hp,mnstr_dmg,mnstr_coin = monster.spawn_monster()
 
 player
 def display_action():
@@ -78,16 +78,18 @@ print()
 
 print("Room 1!")
 
-player.display_interface(mnstr_name,mnstr_hp,create_player["HP"],player_name)
 
-display_action()
-action_choice = input("> ")
+
 while True:
     #Combat
-    while create_player['HP']>0 and mnstr_hp>0:
-        
+    player.display_interface(mnstr_name,mnstr_hp,create_player["HP"],player_name)
 
-        if action_choice == '1':
+    display_action()
+    action_choice = input("> ")
+    if create_player['HP'] <= 0 or mnstr_hp <= 0:
+            break
+
+    if action_choice == '1':
             
 
             mnstr_hp = player.deal_damage(create_player["Damage"],mnstr_hp)
@@ -103,21 +105,26 @@ while True:
                 
 
             
-        elif action_choice == '2':
-            print("Skills:")
-            player_skill = combat["Skills"]
-            
-            print("\n--- Available Skills ---")
-            combat_styles.display_skill_interface(combat["Skills"])
-            skill_choice = input(">")
-            
-            chosen_skill_dmg = combat["Skills"][skill_choice]["Damage"]
-            chosen_skill_uses = combat["Skills"][skill_choice]["uses"]
-            chosen_skill_name = combat["Name"]
+    elif action_choice == '2':
+            if wants_a_class == 1:
+                print("Skills:")
+                player_skill = combat["Skills"]
+                
+                print("\n--- Available Skills ---")
+                combat_styles.display_skill_interface(player_skill)
+                skill_choice = input(">")
+                
+                chosen_skill_dmg = combat["Skills"][skill_choice]["Damage"]
+                chosen_skill_uses = combat["Skills"][skill_choice]["uses"]
+                chosen_skill_name = combat["Name"]
 
-            mnstr_hp = combat_styles.skill_damage(chosen_skill_name,mnstr_name,chosen_skill_dmg,mnstr_hp)
-            print(f"Uses Left: {chosen_skill_uses}")
-            is_monster_dead(mnstr_hp)
-        else:
+                mnstr_hp = combat_styles.skill_damage(chosen_skill_name,mnstr_name,chosen_skill_dmg,mnstr_hp)
+                print(f"Uses Left: {combat_styles.skill_used(chosen_skill_uses)}")
+                is_monster_dead(mnstr_hp)
+            else:
+                print("You Don't have a Skill!")
+                continue
+                
+    else:
             print("Invalid Input! Try Again!\n")
             exit()
