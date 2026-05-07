@@ -3,9 +3,13 @@ import combat_styles
 import monster
 #stores list for classes which came from function "get_class_data()" in combat_styles
 class_list = combat_styles.get_class_data()
-monster_list = monster.monster_data()
 action_list = player.player_action_data()
 player_data_list = player.player_create
+mnstr_name,mnstr_hp,mnstr_dmg = monster.spawn_monster()
+def display_action():
+    for key,details in action_list.items():
+     print(f"{key}: {details}")
+
 
 #asks for players name
 print("Welcome to Aincrad!")
@@ -62,94 +66,87 @@ else:
 print()
 
 #Combat
-#player will choose which to fight for now
+
+print("Room 1!")
+player.display_interface(mnstr_name,mnstr_hp,create_player["HP"],player_name)
+
+display_action()
+action_choice = input("> ")
 while True:
-    print("Room 1!")
-    for key,details in monster_list.items():
-        print(f"{key}: {details['Name']}")
-    monster_choice = input("> ")
-
-    selected_monster = monster.select_monster(monster_choice)
-
     #Combat
-    while create_player['HP']>0 and selected_monster["Stats"]["HP"]>0:
-        print(f"Current Hp: {create_player['HP']}")
-        print(f"{selected_monster["Name"]} Spawned, What will {player_name} do? ")
-        for key,details in action_list.items():
-            print(f"{key}: {details}")
-        action_choice = input("> ")
+    while create_player['HP']>0 and mnstr_hp>0:
+        
 
         if action_choice == '1':
-            monster_hp = selected_monster["Stats"]["HP"]
-            player_hp = create_player['HP']
-            player_dmg = create_player['Damage']
-            monster_dmg = selected_monster['Stats']['Damage']
-
-            selected_monster["Stats"]["HP"] = player.deal_damage(player_dmg,monster_hp)
-            print(f"You Dealt {player_dmg}, {selected_monster["Name"]} has {selected_monster["Stats"]["HP"]} left!")
-            create_player['HP'] = monster.deal_damage(monster_dmg,player_hp)
-            print(create_player['HP'])
             
-            if selected_monster["Stats"]["HP"] < 0:
-                print(f"Congrats! You Deafeated {selected_monster['Name']}")
+
+            mnstr_hp = player.deal_damage(create_player["Damage"],mnstr_hp)
+            if mnstr_hp <= 0:
+                print(f"Congrats! You Deafeated {mnstr_name}")
                 break
+            # else:
+            #     create_player['HP'] = monster.deal_damage(mnstr_dmg,create_player['HP'])
             
-            print('\n-----------------------------------\n')
             
-            print(f"{selected_monster['Name']}'s Turn!\n")
-            
-            print(f"{selected_monster['Name']} Dealt {monster_dmg}, to {create_player["Name"]}!\n")
-            
-            print(f"{create_player['Name']} now has {create_player["HP"]}")
-
-            if create_player["HP"] <= 0:
-                print("You have been defeated... Game Over.")
-                exit()
-        elif action_choice == '2':
-            print("Skills:")
-            player_skill = combat["Skills"]
-            
-            print("\n--- Available Skills ---")
-            for key, skill_info in player_skill.items():
-                name = skill_info["Name"]
-                dmg = skill_info["Damage"]
-                uses = skill_info["uses"]
-                print(f"[{key}] {name} - Deals {dmg} Damage \n Uses: {uses}")
-            skill_choice = input(">")
-
-            if skill_choice in player_skill:
-                selected_skill = player_skill[skill_choice]
-                
-                skill_dmg = selected_skill["Damage"]
-                curent = selected_skill["uses"]
-                monster_hp = selected_monster["Stats"]["HP"]
-                monster_dmg = selected_monster["Stats"]["Damage"]
-                player_hp = create_player["HP"]
-                new_monster_hp,uses = player.player_use_skill(skill_dmg,monster_hp,curent)
-
-                
-                selected_monster["Stats"]["HP"] = new_monster_hp
-                selected_skill["uses"] = uses
-                
-                
-                print(f"You Dealt {skill_dmg}, {selected_monster["Name"]} has {selected_monster["Stats"]["HP"]} left!")
-                create_player['HP'] = monster.deal_damage(monster_dmg,player_hp)
-                
-            
-                if selected_monster["Stats"]["HP"] < 0:
-                    print(f"Congrats! You Deafeated {selected_monster['Name']}")
-                    break
+            else:
             
                 print('\n-----------------------------------\n')
             
-                print(f"{selected_monster['Name']}'s Turn!\n")
-            
-                print(f"{selected_monster['Name']} Dealt {monster_dmg}, to {create_player["Name"]}!\n")
-            
-                print(f"{create_player['Name']} now has {create_player["HP"]}")
+                print(f"{mnstr_name}'s Turn!\n")
+                    
+
+                create_player["HP"] = monster.deal_damage(mnstr_dmg,create_player["HP"])
+
+                
 
                 if create_player["HP"] <= 0:
                     print("You have been defeated... Game Over.")
                     exit()
+        # elif action_choice == '2':
+        #     print("Skills:")
+        #     player_skill = combat["Skills"]
+            
+        #     print("\n--- Available Skills ---")
+        #     for key, skill_info in player_skill.items():
+        #         name = skill_info["Name"]
+        #         dmg = skill_info["Damage"]
+        #         uses = skill_info["uses"]
+        #         print(f"[{key}] {name} - Deals {dmg} Damage \n Uses: {uses}")
+        #     skill_choice = input(">")
+
+        #     if skill_choice in player_skill:
+        #         selected_skill = player_skill[skill_choice]
+                
+        #         skill_dmg = selected_skill["Damage"]
+        #         curent = selected_skill["uses"]
+        #         monster_hp = selected_monster["Stats"]["HP"]
+        #         monster_dmg = selected_monster["Stats"]["Damage"]
+        #         player_hp = create_player["HP"]
+        #         new_monster_hp,uses = player.player_use_skill(skill_dmg,monster_hp,curent)
+
+                
+        #         selected_monster["Stats"]["HP"] = new_monster_hp
+        #         selected_skill["uses"] = uses
+                
+                
+        #         print(f"You Dealt {skill_dmg}, {selected_monster["Name"]} has {selected_monster["Stats"]["HP"]} left!")
+        #         create_player['HP'] = monster.deal_damage(monster_dmg,player_hp)
+                
+            
+        #         if selected_monster["Stats"]["HP"] < 0:
+        #             print(f"Congrats! You Deafeated {selected_monster['Name']}")
+        #             break
+            
+        #         print('\n-----------------------------------\n')
+            
+        #         print(f"{selected_monster['Name']}'s Turn!\n")
+            
+        #         print(f"{selected_monster['Name']} Dealt {monster_dmg}, to {create_player["Name"]}!\n")
+            
+        #         print(f"{create_player['Name']} now has {create_player["HP"]}")
+
+        #         if create_player["HP"] <= 0:
+        #             print("You have been defeated... Game Over.")
+        #             exit()
 
             
