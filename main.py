@@ -6,11 +6,20 @@ class_list = combat_styles.get_class_data()
 action_list = player.player_action_data()
 player_data_list = player.player_create
 mnstr_name,mnstr_hp,mnstr_dmg = monster.spawn_monster()
+
+player
 def display_action():
     for key,details in action_list.items():
      print(f"{key}: {details}")
-
-
+def is_monster_dead(monster_hp):
+    if monster_hp <= 0:
+        print(f"Congrats! You Deafeated {mnstr_name}")
+        exit()
+def is_player_dead(player_hp):
+    
+    if player_hp <= 0:
+        print("You have been defeated... Game Over.")
+        exit()
 #asks for players name
 print("Welcome to Aincrad!")
 print("Please State Your Name Traveller")
@@ -36,7 +45,7 @@ if wants_a_class == "1":
         
     fighting_style_choice = input("> ")
     #sends player's input to combat_styles.select_character() for complete class info and updating player damage
-    combat = combat_styles.select_character(fighting_style_choice)
+    combat = combat_styles.select_class(fighting_style_choice)
 
     #checks if fighting_style_choice is in class_list (fighting_style_choice = 1 if true proceed)
     if fighting_style_choice in class_list:
@@ -82,26 +91,30 @@ while True:
             
 
             mnstr_hp = player.deal_damage(create_player["Damage"],mnstr_hp)
-            if mnstr_hp <= 0:
-                print(f"Congrats! You Deafeated {mnstr_name}")
-                break
+            is_monster_dead(mnstr_hp)
             
-            
-            else:
-            
-                print('\n-----------------------------------\n')
-            
-                print(f"{mnstr_name}'s Turn!\n")
+            print('\n-----------------------------------\n')
+        
+            print(f"{mnstr_name}'s Turn!\n")
                     
 
-                create_player["HP"] = monster.deal_damage(mnstr_dmg,create_player["HP"])
-
+            create_player["HP"] = monster.deal_damage(mnstr_dmg,create_player["HP"])
+            is_player_dead(create_player["HP"])
                 
 
-                if create_player["HP"] <= 0:
-                    print("You have been defeated... Game Over.")
-                    exit()
-       
+            
+        elif action_choice == '2':
+            print("Skills:")
+            player_skill = combat["Skills"]
+            
+            print("\n--- Available Skills ---")
+            combat_styles.display_skill_interface(combat["Skills"])
+            skill_choice = input(">")
+            
+            chosen_skill_dmg = combat["Skills"][skill_choice]["Damage"]
+            chosen_skill_name = combat["Name"]
+            mnstr_hp = combat_styles.skill_damage(chosen_skill_name,mnstr_name,chosen_skill_dmg,mnstr_hp)
+            is_monster_dead(mnstr_hp)
         else:
             print("Invalid Input! Try Again!\n")
             exit()
