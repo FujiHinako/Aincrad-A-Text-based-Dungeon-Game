@@ -78,16 +78,16 @@ print()
 
 print("Room 1!")
 
-player.display_interface(mnstr_name,mnstr_hp,create_player["HP"],player_name)
 
-display_action()
-action_choice = input("> ")
 while True:
-    #Combat
-    while create_player['HP']>0 and mnstr_hp>0:
-        
+    player.display_interface(mnstr_name,mnstr_hp,create_player["HP"],player_name)
 
-        if action_choice == '1':
+    display_action()
+    action_choice = input("> ")
+    #Combat
+       
+
+    if action_choice == '1':
             
 
             mnstr_hp = player.deal_damage(create_player["Damage"],mnstr_hp)
@@ -103,22 +103,32 @@ while True:
                 
 
             
-        elif action_choice == '2':
-            print("Skills:")
-            player_skill = combat["Skills"]
-            
-            print("\n--- Available Skills ---")
-            combat_styles.display_skill_interface(combat["Skills"])
-            skill_choice = input(">")
-            
-            chosen_skill_dmg = combat["Skills"][skill_choice]["Damage"]
-            chosen_skill_uses = combat["Skills"][skill_choice]["uses"]
-            chosen_skill_name = combat["Name"]
+    elif action_choice == '2':
+            if wants_a_class == '1':
+                print("Skills:")
+                player_skill = combat["Skills"]
+                
+                print("\n--- Available Skills ---")
+                combat_styles.display_skill_interface(combat["Skills"])
+                skill_choice = input(">")
+                
+                chosen_skill_dmg = combat["Skills"][skill_choice]["Damage"]
+                chosen_skill_uses = combat["Skills"][skill_choice]["uses"]
+                chosen_skill_name = combat["Name"]
 
-            mnstr_hp = combat_styles.skill_damage(chosen_skill_name,mnstr_name,chosen_skill_dmg,mnstr_hp)
-            combat["Skills"][skill_choice]["uses"] = combat_styles.skill_used(chosen_skill_uses)
-            print(f"Uses Left: {combat["Skills"][skill_choice]["uses"]}")
-            is_monster_dead(mnstr_hp)
-        else:
+                mnstr_hp = combat_styles.skill_damage(chosen_skill_name,mnstr_name,chosen_skill_dmg,mnstr_hp)
+                combat["Skills"][skill_choice]["uses"] = combat_styles.skill_used(chosen_skill_uses)
+                print(f"Uses Left: {combat["Skills"][skill_choice]["uses"]}")
+                is_monster_dead(mnstr_hp)
+            elif wants_a_class == '2':
+                print("You Don't Have a Skill!")
+                continue
+    elif action_choice == '3':
+        pass
+
+    elif action_choice == '4':
+        print("You ran like a coward. Pathetic.")
+        break
+    else:
             print("Invalid Input! Try Again!\n")
             exit()
