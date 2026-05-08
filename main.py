@@ -5,7 +5,7 @@ import monster
 class_list = combat_styles.get_class_data()
 action_list = player.player_action_data()
 player_data_list = player.player_create
-mnstr_name,mnstr_hp,mnstr_dmg = monster.spawn_monster()
+mnstr_name,mnstr_hp,mnstr_dmg,mnstr_coin= monster.spawn_monster()
 
 player
 def display_action():
@@ -116,7 +116,8 @@ while True:
             chosen_skill_name = combat["Name"]
 
             mnstr_hp = combat_styles.skill_damage(chosen_skill_name,mnstr_name,chosen_skill_dmg,mnstr_hp)
-            print(f"Uses Left: {chosen_skill_uses}")
+            combat["Skills"][skill_choice]["uses"] = combat_styles.skill_used(chosen_skill_uses)
+            print(f"Uses Left: {combat["Skills"][skill_choice]["uses"]}")
             is_monster_dead(mnstr_hp)
         else:
             print("Invalid Input! Try Again!\n")
