@@ -1,13 +1,25 @@
+#Jell Raine Pasuquin
+#Jerick Daniel Cortez
 import player
 import combat_styles
 import monster
+import dungeon
+import random
 #stores list for classes which came from function "get_class_data()" in combat_styles
 class_list = combat_styles.get_class_data()
 action_list = player.player_action_data()
 player_data_list = player.player_create
-mnstr_name,mnstr_hp,mnstr_dmg,mnstr_coin= monster.spawn_monster()
+mnstr_name,mnst_stat= monster.spawn_monster()
+mnstr_hp = mnst_stat["HP"]
+mnstr_dmg = mnst_stat["Attack"]
+mnstr_coin = mnst_stat["Coins"]
+room = dungeon.get_rooms()
 
-player
+def continue_room(current_room,next_room):
+    print(f"You Entered {current_room}")
+    print(f"Next Room is{next_room}")
+    choice = input("> ")
+    return choice
 def display_action():
     for key,details in action_list.items():
      print(f"{key}: {details}")
@@ -24,9 +36,9 @@ def is_player_dead(player_hp):
 print("Welcome to Aincrad!")
 print("Please State Your Name Traveller")
 player_name = input(f'> ')
-
+chest_item = None
 #stores and sends player input to player.player_create() for the players name
-create_player = player.player_create(player_name)
+create_player = player.player_create(player_name,chest_item)
 
 #a for loop which loops thru items in create_player 
 for key,values in create_player.items():
@@ -75,60 +87,117 @@ else:
 print()
 
 #Combat
+current_room_id = 1
+in_combat = False
 
-print("Room 1!")
 
 
 while True:
-    player.display_interface(mnstr_name,mnstr_hp,create_player["HP"],player_name)
-
-    display_action()
-    action_choice = input("> ")
-    #Combat
-       
-
-    if action_choice == '1':
-            
-
-            mnstr_hp = player.deal_damage(create_player["Damage"],mnstr_hp)
-            is_monster_dead(mnstr_hp)
-            
-            print('\n-----------------------------------\n')
+    room_data = room[current_room_id]
+    next_room = room[current_room_id]["next"]
+    
+    # --- ROOM ENTRY LOGIC ---
+    if not in_combat:
+        print(f"\n[ {room_data['name']} ]")
+        print(room_data['desc'])
         
-            print(f"{mnstr_name}'s Turn!\n")
-                    
-
-            create_player["HP"] = monster.deal_damage(mnstr_dmg,create_player["HP"])
-            is_player_dead(create_player["HP"])
+        if room_data["type"] == "enemy":
+            mnstr_name, mnst_stat = monster.spawn_monster()
+            mnstr_hp = mnst_stat["HP"]
+            in_combat = True
+            print(f"A {mnstr_name} jumps out!")
+    
+        elif room_data["type"] == "peaceful":
+                print(f"Next Room: {next_room}")
+                print("Type 'next' to move forward.")
+                choice = input("> ")
+                if choice == "next":
+                    current_room_id += 1
+                    continue
+        elif room_data["type"] == "treasure": # Changed from name check to type check for consistency
+            if "items" in room_data:
+                chest_item = random.choice(room_data["items"])
+                print(f"You opened a chest and found: {chest_item[0]}")
+                print(f"What will {player_name} do?\n[1] Store\n[2] Leave")
+                choice = input("> ")
+                if choice == '1':
+                    create_player['inventory'].append(chest_item)
+                    print(f"{chest_item} added to inventory!")
                 
+                # After treasure, move to next room
+                print(f"Next Room: {next_room}")
+                move = input("Type 'next' to move to next room or 'back' to move to last room\n: ").lower()
+                if move == "next":
+                    current_room_id += 1
 
-            
-    elif action_choice == '2':
-            if wants_a_class == '1':
-                print("Skills:")
-                player_skill = combat["Skills"]
-                
-                print("\n--- Available Skills ---")
-                combat_styles.display_skill_interface(combat["Skills"])
-                skill_choice = input(">")
-                
-                chosen_skill_dmg = combat["Skills"][skill_choice]["Damage"]
-                chosen_skill_uses = combat["Skills"][skill_choice]["uses"]
-                chosen_skill_name = combat["Name"]
-
-                mnstr_hp = combat_styles.skill_damage(chosen_skill_name,mnstr_name,chosen_skill_dmg,mnstr_hp)
-                combat["Skills"][skill_choice]["uses"] = combat_styles.skill_used(chosen_skill_uses)
-                print(f"Uses Left: {combat["Skills"][skill_choice]["uses"]}")
-                is_monster_dead(mnstr_hp)
-            elif wants_a_class == '2':
-                print("You Don't Have a Skill!")
                 continue
-    elif action_choice == '3':
-        pass
 
-    elif action_choice == '4':
-        print("You ran like a coward. Pathetic.")
-        break
-    else:
-            print("Invalid Input! Try Again!\n")
-            exit()
+                
+            
+ 
+    if in_combat:
+        player.display_interface(mnstr_name,mnstr_hp,create_player["HP"],player_name)
+
+        display_action()
+        action_choice = input("> ")
+        #Combat
+        
+
+        if action_choice == '1':
+                
+
+            mnstr_hp = player.deal_damage(create_player["Damage"], mnstr_hp)
+            
+            if mnstr_hp <= 0:
+                print(f"You defeated the {mnstr_name}!")
+                in_combat = False # End combat
+                current_room_id += 1 # Move to next room
+                if current_room_id > len(room):
+                    print("Dungeon Cleared!")
+                    break
+                continue
+            
+            # Monster attacks back
+            create_player["HP"] = monster.deal_damage(mnstr_dmg, create_player["HP"])
+            is_player_dead(create_player["HP"])
+
+                
+        elif action_choice == '2':
+                if wants_a_class == '1':
+                    print("Skills:")
+                    player_skill = combat["Skills"]
+                    
+                    print("\n--- Available Skills ---")
+                    combat_styles.display_skill_interface(combat["Skills"])
+                    skill_choice = input(">")
+                    
+                    chosen_skill_dmg = combat["Skills"][skill_choice]["Damage"]
+                    chosen_skill_uses = combat["Skills"][skill_choice]["uses"]
+                    chosen_skill_name = combat["Name"]
+
+                    mnstr_hp = combat_styles.skill_damage(chosen_skill_name,mnstr_name,chosen_skill_dmg,mnstr_hp)
+                    combat["Skills"][skill_choice]["uses"] = combat_styles.skill_used(chosen_skill_uses)
+                    print(f"Uses Left: {combat["Skills"][skill_choice]["uses"]}")
+                    is_monster_dead(mnstr_hp)
+                elif wants_a_class == '2':
+                    print("You Don't Have a Skill!")
+                    continue
+        elif action_choice == '3':
+            if not create_player["inventory"]:
+                print("Your pockets are empty.")
+            else:
+            # Loop through and print each item
+                for i, item in enumerate(create_player["inventory"], 1):
+                    print(f"{i}. {item}")
+                    print("----------------------------\n")
+                
+            # Optional: continue so the monster doesn't attack while you're looking at your bag
+                    continue 
+
+ 
+        elif action_choice == '4':
+            print("You ran like a coward. Pathetic.")
+            break
+        else:
+                print("Invalid Input! Try Again!\n")
+                exit()

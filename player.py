@@ -2,9 +2,10 @@
 deafult_hp = 100
 deafult_dmg = 10
 deafult_class = "Classless"
-def player_create(name):
+def player_create(name,item):
     return {
             "Name" : name,
+            "inventory":[item],
             "HP" : deafult_hp,
             "Damage" : deafult_dmg, 
             "Class" : deafult_class,
@@ -38,6 +39,11 @@ def display_interface(mnstr_name,mnstr_hp,player_hp,player_name):
     print(f"Current Monster hp: {mnstr_hp}")
     print(f"Current Hp: {player_hp}")
     print(f"What will {player_name} do? ")
+
+def continue_room():
+    
+    choice = input("Continue?")
+    return choice
 
 
 
