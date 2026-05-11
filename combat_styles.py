@@ -67,7 +67,6 @@ def skill_damage(skill_name,monster_name,skill_dmg,monster_hp):
         monster_hp = 0
     print(f"{skill_name} Inflicted {monster_name} {skill_dmg} Damage!")
     print(f"{monster_name} now has {monster_hp}")
-    print
     return monster_hp
 
 def skill_used(uses_left):

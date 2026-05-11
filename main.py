@@ -94,7 +94,9 @@ else:
 print()
 
 #Combat
+#determine which room are you
 current_room_id = 1
+
 in_combat = False
 
 
@@ -201,7 +203,7 @@ while True:
                     
                     chosen_skill_dmg = combat["Skills"][skill_choice]["Damage"]
                     chosen_skill_uses = combat["Skills"][skill_choice]["uses"]
-                    chosen_skill_name = combat["Name"]
+                    chosen_skill_name = combat["Skills"][skill_choice]["Name"]
 
                     mnstr_hp = combat_styles.skill_damage(chosen_skill_name,mnstr_name,chosen_skill_dmg,mnstr_hp)
                     combat["Skills"][skill_choice]["uses"] = combat_styles.skill_used(chosen_skill_uses)
@@ -212,51 +214,63 @@ while True:
                     print("You Don't Have a Skill!")
                     continue
         elif action_choice == '3':
-           if not create_player["inventory"]:
+           if create_player["inventory"] == None or len(create_player["inventory"]) == 0:
                 print("Your pockets are empty.")
            else:
-            print("\n--- Inventory ---")
-            # 1. Display items with their index
-            for i, item in enumerate(create_player["inventory"], 1):
-                # Using .get() prevents crashes if an item is missing a key
-                stat_type = "Damage" if "Damage" in item else "HP"
-                print(f"[{i}] {item['Name']} (+{item.get(stat_type)} {stat_type})")
-            print(f"[{len(create_player['inventory']) + 1}] Back")
-            
-        inventory_choice = input("Choose an item to use/equip: ")
-        
-        # 2. Validate the input
-        if inventory_choice.isdigit():
-            idx = int(inventory_choice) - 1
-            
-            if 0 <= idx < len(create_player["inventory"]):
-                # 3. Get the item and apply stats
-                selected_item = create_player["inventory"][idx]
+                print("\n--- Inventory ---")
+                # Filter out None items and display valid items
+                valid_items = [item for item in create_player["inventory"] if item is not None]
+                for i, item in enumerate(valid_items, 1):
+                    # Determine the stat type
+                    if "Damage" in item:
+                        stat_type = "Damage"
+                    elif "HP" in item:
+                        stat_type = "HP"
+                    else:
+                        stat_type = None
+                    
+                    if stat_type:
+                        print(f"[{i}] {item['Name']} (+{item.get(stat_type)} {stat_type})")
+                    else:
+                        print(f"[{i}] {item['Name']}")
                 
-                if "Damage" in selected_item:
-                    create_player["Damage"] += selected_item["Damage"]
-                    print(f"You equipped {selected_item['Name']}! Attack is now {create_player['Damage']}.")
-                elif "HP" in selected_item:
-                    create_player["HP"] += selected_item["HP"]
-                    print(f"You used {selected_item['Name']}! HP is now {create_player['HP']}.")
+                if not valid_items:
+                    print("Your pockets are empty.")
+                else:
+                    print(f"[{len(valid_items) + 1}] Back")
+                    inventory_choice = input("Choose an item to use/equip: ")
                 
-                # 4. Remove the item after use
-                create_player["inventory"].pop(idx)
-            #
-            elif idx == len(create_player["inventory"]):
-                print("Closing bag...")
-            else:
-                print("Invalid slot.")
-        else:
-            print("Invalid input.")
-    
-    
-            continue 
+                    # 2. Validate the input
+                    if inventory_choice.isdigit():
+                        idx = int(inventory_choice) - 1
+                        
+                        if 0 <= idx < len(valid_items):
+                            # 3. Get the item and apply stats
+                            selected_item = valid_items[idx]
+                            
+                            if "Damage" in selected_item:
+                                create_player["Damage"] += selected_item["Damage"]
+                                print(f"You equipped {selected_item['Name']}! Attack is now {create_player['Damage']}.")
+                            elif "HP" in selected_item:
+                                create_player["HP"] += selected_item["HP"]
+                                print(f"You used {selected_item['Name']}! HP is now {create_player['HP']}.")
+                            
+                            # 4. Remove the item after use
+                            create_player["inventory"].remove(selected_item)
+                        
+                        elif idx == len(valid_items):
+                            print("Closing bag...")
+                        else:
+                            print("Invalid slot.")
+                    else:
+                        print("Invalid input.")
+                    
+                    continue 
 
- 
-    elif action_choice == '4':
+        elif action_choice == '4':
             print("You ran like a coward. Pathetic.")
             break
-    else:
-             print("Invalid Input! Try Again!\n")
+        else:
+            print("Invalid Input! Try Again!\n")
+            continue
                 

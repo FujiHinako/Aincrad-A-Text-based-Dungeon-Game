@@ -3,9 +3,12 @@ deafult_hp = 100
 deafult_dmg = 10
 deafult_class = "Classless"
 def player_create(name,item):
+    inventory = []
+    if item is not None:
+        inventory.append(item)
     return {
             "Name" : name,
-            "inventory":[item],
+            "inventory": inventory,
             "HP" : deafult_hp,
             "Damage" : deafult_dmg, 
             "Class" : deafult_class,

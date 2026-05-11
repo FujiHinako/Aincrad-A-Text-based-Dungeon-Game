@@ -19,7 +19,7 @@ def get_rooms():
             },
             3:{
                 "name":"Treasure Room",
-                "desc":"A cold dark cave",
+                "desc":"Room Filled with Treasure",
                 "next":"Enemy Room",
                 "type": "treasure",
                 "items":{"Sword":{"Damage":5},
@@ -30,7 +30,7 @@ def get_rooms():
             },
             4:{
                 "name":"Enemy Room",
-                "desc":"A cold dark cave",
+                "desc":"Room ",
                 "type": "enemy",
                 "next":None
                 
