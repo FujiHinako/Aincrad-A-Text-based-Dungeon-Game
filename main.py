@@ -53,7 +53,10 @@ if wants_a_class == "1":
     for key,details in class_list.items():
         name = details["Name"]
         dmg = details["Stats"]["Damage"]
+        item = details["Item"]["Name"]
+        item_dmg = details["Item"]["Damage"]
         print(f"Class {key}: {name} - Damage [{dmg}]")
+        print(f"Class Item: {item} - Damage [{item_dmg}]")
         
     fighting_style_choice = input("> ")
     #sends player's input to combat_styles.select_character() for complete class info and updating player damage
@@ -70,9 +73,13 @@ if wants_a_class == "1":
     #access deeper list value
         create_player["Damage"] = selected_data["Stats"]["Damage"]
         create_player["Class"] = selected_data["Name"]
+        # Change this line in your class selection logic:
+        create_player["inventory"] = [{"Name": selected_data["Item"]["Name"], "Damage": selected_data["Item"]["Damage"]}]
+
         
     
         print(f"\nPower increased! You are now a {create_player['Class']} with {create_player['Damage']} Damage.")
+        print(f"\nClass includes {selected_data['Item']['Name']}! Item Added to players Inventory!")
     else:
         print("Invalid choice, the monsters of Aincrad won't be so forgiving!")
 
@@ -116,21 +123,42 @@ while True:
                     continue
         elif room_data["type"] == "treasure": # Changed from name check to type check for consistency
             if "items" in room_data:
-                chest_item = random.choice(room_data["items"])
-                print(f"You opened a chest and found: {chest_item[0]}")
-                print(f"What will {player_name} do?\n[1] Store\n[2] Leave")
+                # 1. Get the list of item names (keys) from the dict
+                item_names = list(room_data["items"].keys())
+
+                # 2. Randomly pick one name
+                random_name = random.choice(item_names)
+
+                # 3. Access the full data for that specific item
+                chosen_item = room_data["items"][random_name]
+
+                
+            
+                print(f"You found a chest")
+                print(f"What will {player_name} do?\n[1] Open\n[2] Leave")
                 choice = input("> ")
                 if choice == '1':
-                    create_player['inventory'].append(chest_item)
-                    print(f"{chest_item} added to inventory!")
+                      # Get 5
                 
-                # After treasure, move to next room
-                print(f"Next Room: {next_room}")
-                move = input("Type 'next' to move to next room or 'back' to move to last room\n: ").lower()
-                if move == "next":
+                    print(f"You opened the chest and found: {random_name}")
+                    for stat, value in chosen_item.items():
+                        print(f"Bonus: +{value} {stat}")
+                    print(f"What will {player_name} do?\n[1] Store\n[2] Leave")
+                    
+                    choice = input("> ")
+                    if choice == '1':
+                        # Append the name string to the inventory list
+                        chosen_item["Name"] = random_name 
+                        print(f"{random_name} Added to {player_name}'s Inventory!")
+                        create_player['inventory'].append(chosen_item)
+                        # Example: Update player damage immediately
+                            # After treasure, move to next room
+            print(f"Next Room: {next_room}")
+            move = input("Type 'next' to move to next room or 'back' to move to last room\n: ").lower()
+            if move == "next":
                     current_room_id += 1
 
-                continue
+            continue
 
                 
             
@@ -179,25 +207,56 @@ while True:
                     combat["Skills"][skill_choice]["uses"] = combat_styles.skill_used(chosen_skill_uses)
                     print(f"Uses Left: {combat["Skills"][skill_choice]["uses"]}")
                     is_monster_dead(mnstr_hp)
+                    continue
                 elif wants_a_class == '2':
                     print("You Don't Have a Skill!")
                     continue
         elif action_choice == '3':
-            if not create_player["inventory"]:
+           if not create_player["inventory"]:
                 print("Your pockets are empty.")
-            else:
-            # Loop through and print each item
-                for i, item in enumerate(create_player["inventory"], 1):
-                    print(f"{i}. {item}")
-                    print("----------------------------\n")
+           else:
+            print("\n--- Inventory ---")
+            # 1. Display items with their index
+            for i, item in enumerate(create_player["inventory"], 1):
+                # Using .get() prevents crashes if an item is missing a key
+                stat_type = "Damage" if "Damage" in item else "HP"
+                print(f"[{i}] {item['Name']} (+{item.get(stat_type)} {stat_type})")
+            print(f"[{len(create_player['inventory']) + 1}] Back")
+            
+        inventory_choice = input("Choose an item to use/equip: ")
+        
+        # 2. Validate the input
+        if inventory_choice.isdigit():
+            idx = int(inventory_choice) - 1
+            
+            if 0 <= idx < len(create_player["inventory"]):
+                # 3. Get the item and apply stats
+                selected_item = create_player["inventory"][idx]
                 
-            # Optional: continue so the monster doesn't attack while you're looking at your bag
-                    continue 
+                if "Damage" in selected_item:
+                    create_player["Damage"] += selected_item["Damage"]
+                    print(f"You equipped {selected_item['Name']}! Attack is now {create_player['Damage']}.")
+                elif "HP" in selected_item:
+                    create_player["HP"] += selected_item["HP"]
+                    print(f"You used {selected_item['Name']}! HP is now {create_player['HP']}.")
+                
+                # 4. Remove the item after use
+                create_player["inventory"].pop(idx)
+            #
+            elif idx == len(create_player["inventory"]):
+                print("Closing bag...")
+            else:
+                print("Invalid slot.")
+        else:
+            print("Invalid input.")
+    
+    
+            continue 
 
  
-        elif action_choice == '4':
+    elif action_choice == '4':
             print("You ran like a coward. Pathetic.")
             break
-        else:
-                print("Invalid Input! Try Again!\n")
-                exit()
+    else:
+             print("Invalid Input! Try Again!\n")
+                

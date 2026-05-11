@@ -22,8 +22,8 @@ def get_rooms():
                 "desc":"A cold dark cave",
                 "next":"Enemy Room",
                 "type": "treasure",
-                "items":[("Sword",5),
-                    ("Armour",10)]
+                "items":{"Sword":{"Damage":5},
+                    "Armour":{"HP":15}}
                     
                     
                 
